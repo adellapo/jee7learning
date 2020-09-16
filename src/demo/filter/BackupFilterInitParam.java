@@ -1,7 +1,6 @@
 package demo.filter;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.servlet.Filter;
@@ -11,43 +10,48 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.annotation.WebInitParam;
 
-//@WebFilter(filterName = "BackupFilter", urlPatterns = { "/*" })
-public class BackupFilter implements Filter {
+@WebFilter(urlPatterns = { "/*" }, initParams = { @WebInitParam(name = "desde", value = "15"),
+		@WebInitParam(name = "hasta", value = "16") })
+public class BackupFilterInitParam implements Filter {
 
-	public BackupFilter() {
+	private int horaDesde;
+	private int horaHasta;
+
+	public BackupFilterInitParam() {
 	}
 
 	public void init(FilterConfig fConfig) throws ServletException {
+
+		String desde = fConfig.getInitParameter("desde");
+		String hasta = fConfig.getInitParameter("hasta");
+
+		horaDesde = Integer.parseInt(desde);
+		horaHasta = Integer.parseInt(hasta);
+
+	}
+
+	public void destroy() {
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 
-		// obtengo el calendario con la hora actual
 		GregorianCalendar gc = new GregorianCalendar();
 
-		// obtengo las horas
 		int h = gc.get(GregorianCalendar.HOUR);
-		
-		// paso la hora de AM/PM a 00-24 hs, si es PM le agrego 12
-		int offset = gc.get(GregorianCalendar.AM_PM) == Calendar.PM ? 12 : 0;
-		
-		// hora en formato 00-24hs
-		int hora = h + offset;
-		
-		HttpServletRequest req = (HttpServletRequest)request;
-		
-		if(hora >=10 && hora <=11) {
+
+		int offset = gc.get(GregorianCalendar.AM_PM) == GregorianCalendar.PM ? 12 : 0;
+
+		int hour = h + offset;
+
+		if (hour >= horaDesde && hour <= horaHasta) {
 			request.getRequestDispatcher("EnMantenimiento.jsp").forward(request, response);
-		}else {
+		} else {
 			chain.doFilter(request, response);
 		}
-	
-	}
 
-	public void destroy() {
 	}
 
 }
