@@ -12,8 +12,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 
-@WebFilter(urlPatterns = { "/*" }, initParams = { @WebInitParam(name = "desde", value = "15"),
-		@WebInitParam(name = "hasta", value = "16") })
+@WebFilter(urlPatterns = { "/*" }, initParams = { @WebInitParam(name = "desde", value = "13"),
+		@WebInitParam(name = "hasta", value = "14") })
 public class BackupFilterInitParam implements Filter {
 
 	private int horaDesde;
