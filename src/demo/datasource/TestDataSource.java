@@ -34,6 +34,8 @@ public class TestDataSource extends HttpServlet {
 		
 		try(Connection con = ds.getConnection()) {
 			
+			System.out.println(ds.toString()); // TODO: Borrar
+			
 			PrintWriter pw = response.getWriter();
 			
 			ps = con.prepareStatement(sql);
